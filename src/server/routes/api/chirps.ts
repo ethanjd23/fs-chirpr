@@ -1,11 +1,12 @@
 import * as express from 'express';
+import db from "../../db/index";
 
 const router = express.Router();
 
 router.get("/:chirpid", async (req, res) => {
     const chirpID = Number(req.params.chirpid);
     try {
-        res.send("You looking for chirp #" + chirpID);
+        res.json((await db.chirpsDB.getOne(chirpID))[0]);
     } catch (error) {
         res.status(500).json({msg: "It broke! look in console for error."});
     }
@@ -13,7 +14,7 @@ router.get("/:chirpid", async (req, res) => {
 
 router.get('/', async (req, res, next) => {
     try {
-        res.send("got all chirps");
+        res.json(await db.chirpsDB.getAll());
     } catch (error) {
         console.error(error);
         res.status(500).json({msg: "It broke! look in console for error."});
@@ -43,7 +44,8 @@ router.put("/:chirpid", async (req, res) => {
 router.delete("/:chirpid", async (req, res) => {
     const chirpID = Number(req.params.chirpid);
     try {
-        res.send("You deleted chirp #" + chirpID);
+        res.json(db.chirpsDB.deleteOne(chirpID));
+        res.sendStatus(200).json({"msg": "deleted " + chirpID})
     } catch (error) {
         res.status(500).json({msg: "It broke! look in console for error."});
     }
