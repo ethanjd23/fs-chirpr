@@ -4,13 +4,19 @@ const getAll = async () => query("SELECT * FROM chirps")
 
 const getOne = async (id: number) => query(`SELECT * FROM chirps WHERE id = ?`, [id])
 
-const deleteOne = async (id: number) => query(`DELETE FROM chirps WHERE id = ?`, [id])
+const deleteMention = async (id: number) => query(`DELETE FROM mentions WHERE chirpid = ?`, [id])
+const deleteChirp = async (id: number) => query(`DELETE FROM chirps WHERE id = ?`, [id])
 
-const updateOne = async (id: number, userid: number, content: string, location: string) => query(`UPDATE chirps SET userid = ?, content = ?, lcocation = ? WHERE id = ?`, [id, userid, content, location])
+const updateChirp = async (id: number, content: string, location: string) => query(`UPDATE chirps SET content = ?, location = ? WHERE id = ?`, [content, location, id])
+
+const createMention = async (chirpid: number, userid: number) => query(`INSERT INTO mentions VALUES (?, ?)`, [userid, chirpid])
+
 
 export default {
     getAll,
     getOne,
-    deleteOne,
-    updateOne
+    updateChirp,
+    createMention,
+    deleteMention,
+    deleteChirp
 }
