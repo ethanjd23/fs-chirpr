@@ -41,7 +41,7 @@ router.post("/", async (req, res, next) => {
         // Using Object.values takes out all values and puts it in an array. There's only one so I pull it out.
         // This is the ID of the chirp that was just posted. 
     }
-    res.send(200);
+    res.sendStatus(200);
   } catch (error) {
     res.status(500).json({ msg: "It broke! look in console for error." });
     console.log(error);
