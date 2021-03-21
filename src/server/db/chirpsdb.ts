@@ -9,8 +9,9 @@ const deleteChirp = async (id: number) => query(`DELETE FROM chirps WHERE id = ?
 
 const updateChirp = async (id: number, content: string, location: string) => query(`UPDATE chirps SET content = ?, location = ? WHERE id = ?`, [content, location, id])
 
-const createMention = async (chirpid: number, userid: number) => query(`INSERT INTO mentions VALUES (?, ?)`, [userid, chirpid])
-
+const createChirp = async (userid: number, content: string, location: string) => query(`INSERT INTO chirps (userid, content, location) VALUES (?, ?, ?)`, [userid, content, location]);
+const createMention = async (chirpid: number, mentionedUserid: number) => query(`INSERT INTO mentions VALUES (?, ?)`, [mentionedUserid, chirpid])
+const getNewestChirpID = async () => query(`SELECT MAX(id) FROM chirps`)
 
 export default {
     getAll,
@@ -18,5 +19,7 @@ export default {
     updateChirp,
     createMention,
     deleteMention,
-    deleteChirp
+    deleteChirp,
+    createChirp,
+    getNewestChirpID
 }
