@@ -1,5 +1,6 @@
 import * as mysql from "mysql";
-import chirpsDB from "./chirpsdb" 
+import chirpsDB from "./chirpsdb";
+import usersDB from "./usersdb"; 
 
 export const connection = mysql.createConnection({
     host: "localhost",
@@ -18,5 +19,6 @@ export const query = (query: string, values?: Array<string | number>) => {
 };
 
 export default {
-    chirpsDB
+    chirpsDB,
+    usersDB
 }

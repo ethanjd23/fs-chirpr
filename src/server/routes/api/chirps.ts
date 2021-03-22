@@ -25,13 +25,20 @@ router.get("/", async (req, res, next) => {
 
 router.post("/", async (req, res, next) => {
   const newChirp: {
-      userid: number;
+      name: string;
+      email: string | null;
+      password: string | null;
       content: string;
       location: string;
       mentionedUserid?: number[];
   } = req.body;
   try {
-    db.chirpsDB.createChirp(newChirp.userid, newChirp.content, newChirp.location);
+    const doesUserExist = await db.usersDB.getUserID(newChirp.name);
+      if (doesUserExist.length < 1) {
+        db.usersDB.createUser(newChirp.name, newChirp.email, newChirp.password);
+      }
+    const userid = await db.usersDB.getUserID(newChirp.name)
+    db.chirpsDB.createChirp(userid[0].id, newChirp.content, newChirp.location)
     if (newChirp.mentionedUserid) {
         db.chirpsDB.getNewestChirpID().then(chirpIDJSON => {
             newChirp.mentionedUserid.forEach(mention => db.chirpsDB.createMention(Object.values(chirpIDJSON[0])[0], mention))
