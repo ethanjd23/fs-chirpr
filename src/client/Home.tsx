@@ -7,6 +7,8 @@ const Home: React.FunctionComponent = (props) => {
   const [name, setName] = React.useState<string>("");
   const [content, setContent] = React.useState<string>("");
   const [location, setLocation] = React.useState<string>("");
+  const [email, setEmail] = React.useState<string>("");
+  const [password, setPassword] = React.useState<string>("");
   
 
   React.useEffect(() => {
@@ -25,26 +27,37 @@ const Home: React.FunctionComponent = (props) => {
     }
   }
 
-  function handlePostClick() {
-    let newChirp = { userid: name, content: content, location: location };
-    $.ajax({
-      type: "POST",
-      url: "/api/chirps",
-      data: JSON.stringify(newChirp),
-      contentType: "application/json",
-    }).then(() => {
-      setName("");
-      setContent("");
-      setLocation("")
-      getAndRenderChirps();
-    });
+  async function handlePostClick() {
+    try {
+      let userid = await fetch(`http://localhost:3000/api/users/${newChirp.name}`);
+      let newChirp = {  userid, content, location };
+      if(userid) {
+        $.ajax({
+          type: "POST",
+          url: "/api/chirps",
+          data: JSON.stringify(newChirp),
+          contentType: "application/json",
+        }).then(() => {
+          setName("");
+          setContent("");
+          setLocation("")
+          getAndRenderChirps();
+        });
+      } else {
+        $("#input-field").append("<h5>Please enter email and password to create a user</h5>")
+      }
+
+      
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   return (
     <>
     <Header />
       <div className="row custom-bg justify-content-center">
-        <div className="col-6">
+        <div id="input-field" className="col-6">
         <div className="input-group">
             <span className="input-group-text">Username</span>
             <input
@@ -53,6 +66,26 @@ const Home: React.FunctionComponent = (props) => {
               aria-label="Subject"
               value={name}
               onChange={(e) => setName(e.target.value)}
+            ></input>
+          </div>
+        <div className="input-group create-user">
+            <span className="input-group-text">Email</span>
+            <input
+              type="text"
+              className="form-control"
+              aria-label="Subject"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            ></input>
+          </div>
+        <div className="input-group create-user">
+            <span className="input-group-text">Password</span>
+            <input
+              type="text"
+              className="form-control"
+              aria-label="Subject"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             ></input>
           </div>
           <div className="input-group">

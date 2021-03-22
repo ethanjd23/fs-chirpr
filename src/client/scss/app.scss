@@ -6,4 +6,8 @@ $theme-colors: (
     background-color: #4c5b64;
 }
 
+.create-user {
+    display: none;
+}
+
 @import '../../../node_modules/bootstrap/scss/bootstrap.scss';
